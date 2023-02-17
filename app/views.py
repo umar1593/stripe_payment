@@ -1,11 +1,11 @@
+import stripe
 from django.conf import settings
 from django.http import HttpResponseBadRequest, JsonResponse
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-import stripe
-
 from .models import Item
+from .utils import get_page_obj
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -38,6 +38,13 @@ def buy_item(request, item_id):
         cancel_url=domain + '/cancel/',
     )
     return JsonResponse({'session_id': session.id})
+
+
+def item_list(request):
+    item_list = Item.objects.all()
+    page_obj = get_page_obj(item_list, request.GET.get('page'))
+    context = {'page_obj': page_obj, 'index': True}
+    return render(request, 'index.html', context)
 
 
 def show_item(request, item_id):
