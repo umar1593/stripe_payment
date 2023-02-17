@@ -3,13 +3,13 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-load_dotenv()
+dotenv_path = r'C:\Dev\stripe_payment\infra\.env'
+load_dotenv(dotenv_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-DEBUG = True
-
 ALLOWED_HOSTS = ['*']
+DEBUG = True
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 INSTALLED_APPS = [
@@ -60,7 +60,6 @@ DATABASES = {
     }
 }
 
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -87,11 +86,14 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 
 APPEND_SLASH = False
 
 STRIPE_PUBLIC_KEY = os.getenv('STRIPE_PUBLIC_KEY')
 STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+
+
+POSTS_ON_PAGE = 7
