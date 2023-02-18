@@ -1,0 +1,13 @@
+<h3>Order Details</h3>
+
+<ul>
+    {% for item in order.items.all %}
+    <li>{{ item.name }} - ${{ item.price }}</li>
+    {% endfor %}
+</ul>
+
+<p>Discount: ${{ order.discount }}</p>
+<p>Tax: ${{ order.tax }}</p>
+<p>Total: ${{ order.total }}</p>
+
+<a href="{% url 'pay_for_order' order.id %}">Pay for order</a>

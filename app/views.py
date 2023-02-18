@@ -1,10 +1,11 @@
 import stripe
 from django.conf import settings
 from django.http import HttpResponseBadRequest, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
+from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView
 
-from .models import Item
+from .models import Item, Order
 from .utils import get_page_obj
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
@@ -48,12 +49,33 @@ def item_list(request):
 
 
 def show_item(request, item_id):
-    try:
-        item = Item.objects.get(id=item_id)
-    except Item.DoesNotExist:
-        return HttpResponseBadRequest("Invalid item ID")
-
+    item = get_object_or_404(Item, id=item_id)
     return render(request, 'item.html', {'item': item})
+
+
+def order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    context = {
+        'order': order,
+        'total': order.total,
+    }
+    return render(request, 'order_detail.html', context)
+
+
+@csrf_exempt
+def pay_for_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+
+    stripe.api_key = settings.STRIPE_SECRET_KEY
+    intent = stripe.PaymentIntent.create(
+        amount=int(order.total * 100),
+        currency='usd',
+        metadata={'order_id': order.pk},
+    )
+    order.stripe_payment_intent_id = intent.id
+    order.save()
+
+    return JsonResponse({'client_secret': intent.client_secret})
 
 
 class SuccessView(TemplateView):
