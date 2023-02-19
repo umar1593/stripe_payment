@@ -7,10 +7,9 @@ dotenv_path = r'C:\Dev\stripe_payment\.env'
 load_dotenv(dotenv_path)
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 SECRET_KEY = os.getenv('SECRET_KEY', 'local')
 
-DEBUG = os.getenv('SECRET_KEY', default=False)
+DEBUG = os.getenv('SECRET_KEY', default=True)
 
 ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', default='*')
 
@@ -57,8 +56,12 @@ WSGI_APPLICATION = 'bazar.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+        'NAME': os.getenv('DB_NAME', 'postgres'),
+        'USER': os.getenv('POSTGRES_USER', 'postgres'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'postgres'),
+        'HOST': os.getenv('DB_HOST', 'db'),
+        'PORT': os.getenv('DB_PORT', 5432),
     }
 }
 
@@ -89,8 +92,12 @@ USE_L10N = True
 
 USE_TZ = True
 
+
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 
 APPEND_SLASH = False
