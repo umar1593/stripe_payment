@@ -4,9 +4,13 @@ on: [push]
 
 jobs:
   tests:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
 
     steps:
+    - name: Use Node.js 16.x
+      uses: actions/setup-node@v2.4.0
+      with:
+        node-version: '16.x'
     - uses: actions/checkout@v2
     - name: Set up Python 
       uses: actions/setup-python@v2
