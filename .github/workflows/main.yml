@@ -92,4 +92,5 @@ jobs:
         uses: peter-evans/docker-cleanup@v2.4.5
         with:
           containers: "all"
-          images
+          images: "local"
+          volumes: "local"
