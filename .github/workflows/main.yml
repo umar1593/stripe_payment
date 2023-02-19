@@ -1,4 +1,4 @@
-name: mainn
+name: stripe
 
 on:
   push:
