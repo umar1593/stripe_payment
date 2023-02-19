@@ -14,7 +14,6 @@ jobs:
           python-version: 3.8
         env:
           PYTHON_VERSION: 3.8
-        shell: bash
         run: echo "PYTHON_VERSION=${{ env.PYTHON_VERSION }}" >> $GITHUB_ENV
 
       - name: Install dependencies
