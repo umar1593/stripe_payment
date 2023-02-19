@@ -15,6 +15,11 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.8
+        env:
+          PYTHON_VERSION: 3.8
+        shell: bash
+        run: echo "PYTHON_VERSION=${{ env.PYTHON_VERSION }}" >> $GITHUB_ENV
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -92,8 +97,3 @@ jobs:
           containers: "all"
           images: "local"
           volumes: "local"
-
-
-
-#fj;af;ja;fja;sfjsa;dfj;afjk;fjk;lsadffasdfafasf
-#asfasfasfasfafasfaf
