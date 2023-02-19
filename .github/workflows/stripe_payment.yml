@@ -35,9 +35,9 @@ jobs:
       - name: Push to Docker Hub
         uses: docker/build-push-action@v3
         with:
-          context: ./api_yamdb
+          context: .
           push: true
-          tags: umar1593/api_yamdb:latest
+          tags: umar1593/stripe:latest
 
   deploy:
     runs-on: ubuntu-latest
