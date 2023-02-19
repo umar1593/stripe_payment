@@ -4,25 +4,19 @@ on: [push]
 
 jobs:
   tests:
-    name: Clone, setup and test
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        python-version: ["3.7", "3.8", "3.9", "3.10"]
-
     steps:
-    - uses: actions/checkout@v3
-
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+    - uses: actions/checkout@v2
+    - name: Set up Python 
+      uses: actions/setup-python@v2
       with:
-        python-version: ${{ matrix.python-version }}
+        python-version: 3.8
 
     - name: Install dependencies
-      run: |
+      run: | 
         python -m pip install --upgrade pip 
-        pip install -r ./requirements.txt
+        pip install -r requirements.txt 
 
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
