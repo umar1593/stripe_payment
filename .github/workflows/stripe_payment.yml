@@ -1,9 +1,6 @@
-name: stripe
+name: stripe workflow
 
-on:
-  push:
-    branches:
-      - master
+on: [push]
 
 jobs:
   tests:
