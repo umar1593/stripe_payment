@@ -9,7 +9,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Setup Python
-        # uses: actions/setup-python@v3
         with:
           python-version: 3.8
         env:
@@ -60,7 +59,7 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
-          script: |
+          run: |
             sudo docker-compose stop
             sudo docker-compose rm web
             touch .env
@@ -75,13 +74,7 @@ jobs:
             sudo docker-compose up -d
             sudo docker-compose exec -T web python manage.py migrate
             sudo docker-compose exec -T web python manage.py collectstatic --no-input
-      - name: Get tag and tag SHA
-        env:
-          DOCKER_CLI_EXPERIMENTAL: enabled
-        run: |
-          echo "TAG=${{ env.TAG }}"
-          echo "TAG_SHA=${{ env.TAG_SHA }}"
-        shell: bash
+
   clean_up_docker_objects:
     name: Clean up unused Docker objects
     runs-on: ubuntu-latest
