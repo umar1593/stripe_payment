@@ -1,24 +1,26 @@
+yaml
+
 name: main
 
 on:
-  push
+  push:
+    branches:
+      - master
 
 jobs:
   tests:
     runs-on: ubuntu-20.04
-
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Setup Python
         uses: actions/setup-python@v3
         with:
           python-version: 3.8
-
       - name: Install dependencies
-        run: | 
-          python -m pip install --upgrade pip 
-          pip install -r requirements.txt 
-
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
   build_and_push_to_docker_hub:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
@@ -40,14 +42,14 @@ jobs:
           push: true
           tags: umar1593/stripe:latest
           file: ./Dockerfile
-      - name: Set output variable
+      - name: Set tag and tag SHA output
         id: tag_output
         run: |
-          echo "::set-output name=tag::latest"
-          echo "::set-output name=tag_sha::$(docker inspect --format='{{(index .RepoDigests 0)}}' umar1593/stripe:latest | cut -d '@' -f2)"
+          echo "TAG=latest" >> $GITHUB_ENV
+          echo "TAG_SHA=$(docker inspect --format='{{(index .RepoDigests 0)}}' umar1593/stripe:latest | cut -d '@' -f2)" >> $GITHUB_ENV
+        shell: bash
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled
-
   deploy:
     name: Deploy on Yandex.Cloud
     runs-on: ubuntu-latest
@@ -74,15 +76,13 @@ jobs:
             sudo docker-compose up -d
             sudo docker-compose exec -T web python manage.py migrate
             sudo docker-compose exec -T web python manage.py collectstatic --no-input
-
       - name: Get tag and tag SHA
         env:
           DOCKER_CLI_EXPERIMENTAL: enabled
         run: |
-          echo "TAG=${{ steps.tag_output.outputs.tag }}"
-          echo "TAG_SHA=${{ steps.tag_output.outputs.tag_sha }}"
+          echo "TAG=${{ env.TAG }}"
+          echo "TAG_SHA=${{ env.TAG_SHA }}"
         shell: bash
-
   clean_up_docker_objects:
     name: Clean up unused Docker objects
     runs-on: ubuntu-latest
