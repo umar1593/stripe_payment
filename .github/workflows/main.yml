@@ -1,4 +1,4 @@
-name: Example Workflow
+name: main
 
 on: [push]
 
@@ -7,15 +7,18 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Use Node.js 16.x
-      uses: actions/setup-node@v2.5.3
+      uses: actions/setup-node@v2.5.4
       with:
         node-version: '16.x'
-    - name: Set up Python 
-      uses: actions/setup-python@v2.4.4
+
+    - name: Use Python 3.x
+      uses: actions/setup-python@v2.4.5
       with:
-        python-version: 3.9
+        python-version: 3.8
 
     - name: Install dependencies
       run: | 
