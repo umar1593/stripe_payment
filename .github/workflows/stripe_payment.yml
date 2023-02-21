@@ -1,4 +1,4 @@
-name: stripe workflow
+name: just workflow
 
 on: [push]
 
